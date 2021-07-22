@@ -58,7 +58,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: 'development'
           cherrypickbranch: 'development-dist'
-          force: 'true'
 #  deploy-dist:
 #    runs-on: self-hosted
 #    needs: deploy
