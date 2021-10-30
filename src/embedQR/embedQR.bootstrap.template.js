@@ -8,15 +8,17 @@ document.addEventListener('DOMContentLoaded', function(e) {
 		window.eQR = _eQR.default;	// Integrate into window
 		eQR.engine = './embedQR.engine.js'; // Configure engine path
 		// eQR.lang = [ '%s', '%s', '%s', '%s', '%s', '%s', '%s' ];	// Configure status message array
+		eQR.lang = [ 'Invalid contents.', 'Failed to parse.', 'Failed to load Reader.', 'Scan Code', 'Loading Reader...', 'Parsing...', 'Success!' ];
 		eQR.status = (s) => { // Add status handler
 			const el = _el('qrl'); // Get status element (like the label of file input) from DOM
 			el.innerText = eQR.lang[s]; // Respond with message from array
 			if (s < 3) { el.style.color='#d43535' } else if (s == 6) {  el.style.color='#47c266' } // Respond with colours
 		};
-		eQR.readwifi = function (valid, ssid, password) { // Add WiFi-URI parser handler (access to eQR prohibits arrow shorthand)
-			if (!valid) { eQR.status(0); return; } // Fail whole scan if WiFi-URI failed to parse
-			_el('ssid').value = ssid;
-			_el('pass').value = password;
+		eQR.readwifi = function (wi) { // Add WiFi-URI parser handler (access to eQR prohibits arrow shorthand)
+			if (!wi) { eQR.status(0); return; } // Fail whole scan if WiFi-URI failed to parse
+			_el('ssid').value = wi.S;
+			_el('pass').value = (wi.P) : wi.P ? '';
+			_el('savewifi').click();
 		};	
 		eQR.readraw = (u) => { // Add raw output handler for debugging purposes
 			console.log('readraw: ' + u);
