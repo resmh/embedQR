@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 			el.innerText = eQR.lang[s]; // Respond with message from array
 			if (s < 3) { el.style.color='#d43535' } else if (s == 6) {  el.style.color='#47c266' } // Respond with colours
 		};
-		eQR.readwifi = function (valid, ssid, password) => { // Add WiFi-URI parser handler (access to eQR prohibits arrow shorthand)
+		eQR.readwifi = function (valid, ssid, password) { // Add WiFi-URI parser handler (access to eQR prohibits arrow shorthand)
 			if (!valid) { eQR.status(0); return; } // Fail whole scan if WiFi-URI failed to parse
 			_el('ssid').value = ssid;
 			_el('pass').value = password;
