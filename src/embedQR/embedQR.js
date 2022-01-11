@@ -19,15 +19,16 @@ const embedQR = {
   let uris = text.split(/\r\n|\n/);
   for (let i=0; i<uris.length; i++) {
    if (typeof this.readwifi === 'function' && uris[i].toUpperCase().startsWith('WIFI:')) {
-	const wi = {}; let ma = [];
-	wi.H = (uris[i].toUpperCase().match(/[:|;]H:TRUE/)) ? true : false;
-	ma = uris[i].match(/[:|;]S:([^;]+);/); if (ma) { wi.S = decodeURI(ma[1]).replace(/%3b|%3B/g, ';'); }
-	ma = uris[i].match(/[:|;]K:([a-fA-F0-9\+=\/]+);/); if (ma) { wi.K = ma[1]; }
-	ma = uris[i].match(/[:|;]R:([a-fA-F0-9]+);/); if (ma) { wi.R = ma[1]; }
-	ma = uris[i].match(/[:|;]I:([^;]+);/); if (ma) { wi.I = decodeURI(ma[1]).replace(/%3b|%3B/g, ';'); }
-	ma = uris[i].match(/[:|;]P:([^;]+);/); if (ma) { wi.P = decodeURI(ma[1]).replace(/%3b|%3B/g, ';'); }
-	ma = uris[i].match(/[:|;]T:([^;]+);/); if (ma) { wi.T = ma[1].replace(/%3b|%3B/g, ';'); }
-	uris.splice(i, 1); i--;	if (wi.S) { this.readwifi(wi); } else { this.readwifi(null); }
+    const wi = {}; let ma = [];
+    wi.H = (uris[i].toUpperCase().match(/[:|;]H:TRUE/)) ? true : false;
+    ma = uris[i].match(/[:|;]T:([^;]+);/);
+    if (ma) { wi.T = ma[1]; uris[i] = uris[i].replace('\\;', '%3B').replace('\\\"', '%22'); }
+    ma = uris[i].match(/[:|;]S:([^;]+);/); if (ma) { wi.S = decodeURIComponent(ma[1]); }
+    ma = uris[i].match(/[:|;]K:([a-fA-F0-9\+=\/]+);/); if (ma) { wi.K = ma[1]; }
+    ma = uris[i].match(/[:|;]R:([a-fA-F0-9]+);/); if (ma) { wi.R = ma[1]; }
+    ma = uris[i].match(/[:|;]I:([^;]+);/); if (ma) { wi.I = decodeURIComponent(ma[1]); }
+    ma = uris[i].match(/[:|;]P:([^;]+);/); if (ma) { wi.P = decodeURIComponent(ma[1]); }
+    uris.splice(i, 1); i--; if (wi.S) { this.readwifi(wi); } else { this.readwifi(null); }
    }
   }
   if (uris.length) { this.read(uris); }
