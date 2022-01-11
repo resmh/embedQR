@@ -25,24 +25,76 @@ jobs:
           persist-credentials: false
       - name: Build embedQR.js
         run: |
-          cpp -undef -P $GITHUB_WORKSPACE/src/embedQR/embedQR.js $GITHUB_WORKSPACE/src/embedQR.js
-          chmod +x $GITHUB_WORKSPACE/tools/embedcode.sh
-          $GITHUB_WORKSPACE/tools/embedcode.sh $GITHUB_WORKSPACE/src/embedQR.js EMBEDQR $GITHUB_WORKSPACE/src/embedQR.h $GITHUB_WORKSPACE/src/embedQR.gz.h
-          chmod -x $GITHUB_WORKSPACE/tools/embedcode.sh
+          cpp -undef -P ./src/embedQR/embedQR.js ./src/embedQR.js
+          chmod +x ./tools/embedcode.sh
+          ./tools/embedcode.sh ./src/embedQR.js EMBEDQR ./src/embedQR.h ./src/embedQR.gz.h
+          chmod -x ./tools/embedcode.sh
       - name: Build embedQR.engine.js
         run: |
-          cpp -undef -P $GITHUB_WORKSPACE/src/jsQR/dist/jsQR.js $GITHUB_WORKSPACE/src/embedQR.engine.js
-          chmod +x $GITHUB_WORKSPACE/tools/embedcode.sh
-          $GITHUB_WORKSPACE/tools/embedcode.sh $GITHUB_WORKSPACE/src/embedQR.engine.js EMBEDQR_ENGINE $GITHUB_WORKSPACE/src/embedQR.engine.h $GITHUB_WORKSPACE/src/embedQR.engine.gz.h
-          chmod -x $GITHUB_WORKSPACE/tools/embedcode.sh
-      - name: Copy embedQR.bootstrap.js
-        run: cp $GITHUB_WORKSPACE/src/embedQR/embedQR.bootstrap.template.js $GITHUB_WORKSPACE/src/embedQR.bootstrap.template.js
-      - name: Copy embedQR.interface.html
-        run: cp $GITHUB_WORKSPACE/src/embedQR/embedQR.interface.template.html $GITHUB_WORKSPACE/src/embedQR.interface.template.html
-      - name: Commit and push build
+          cpp -undef -P ./src/jsQR/dist/jsQR.js ./src/embedQR.engine.js
+          chmod +x ./tools/embedcode.sh
+          ./tools/embedcode.sh ./src/embedQR.engine.js EMBEDQR_ENGINE ./src/embedQR.engine.h ./src/embedQR.engine.gz.h
+          chmod -x ./tools/embedcode.sh
+
+      - name: Store embedQR-build
+        uses: actions/upload-artifact@v2
+        with:
+          name: embedqr-build
+          path: |
+            ./src/embedQR.h
+            ./src/embedQR.gz.h
+            ./src/embedQR.engine.h
+            ./src/embedQR.engine.gz.h
+
+      - name: Store embedQR-static
+        uses: actions/upload-artifact@v2
+        with:
+          name: embedqr-static
+          path: |
+            ./src/embedQR/embedQR.js
+            ./src/embedQR/embedQR.engine.js
+            ./src/embedQR/embedQR.bootstrap.template.js
+            ./src/embedQR/embedQR.interface.template.html
+
+      - name: Store embedQR-text
+        uses: actions/upload-artifact@v2
+        with:
+          name: embedqr-text
+          path: |
+            ./README.md
+            ./LICENSE.md
+            ./LICENSE.engine.md
+            ./library.properties
+
+      - name: Switch to dist branch
+        run: git checkout -f --recurse-submodules development-dist
+
+      - name: Clean up
+        run: |
+          git rm -rf ./* || true
+          rm -rf ./* || true
+          mkdir ./src || true
+
+      - name: Restore embedqr-text
+        uses: actions/download-artifact@v2
+        with:
+          name: embedqr-text
+          path: .
+
+      - name: Restore embedqr-static
+        uses: actions/download-artifact@v2
+        with:
+          name: embedqr-static
+          path: ./src
+
+      - name: Restore embedqr-build
+        uses: actions/download-artifact@v2
+        with:
+          name: embedqr-build
+          path: ./src
+
+      - name: Commit and push to dist branch
         uses: resmh/push@master-pushdist
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: 'development'
-          distbranch: 'development-dist'
-          distfiles: 'README.md:LICENSE.md:LICENSE.engine.md:src/embedQR.js:src/embedQR.h:src/embedQR.gz.h:src/embedQR.engine.js:src/embedQR.engine.h:src/embedQR.engine.gz.h:src/embedQR.bootstrap.template.js:src/embedQR.interface.template.html:extra/embedQR.interface.capwarn.template.html:extra/embedQR.interface.capwarn.template.h'
+          branch: 'development-dist'
