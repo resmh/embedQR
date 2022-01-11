@@ -14,17 +14,17 @@ document.addEventListener('DOMContentLoaded', function(e) {
 			el.innerText = eQR.lang[s]; // Respond with message from array
 			if (s < 3) { el.style.color='#d43535' } else if (s == 6) {  el.style.color='#47c266' } // Respond with colours
 		};
-		eQR.readwifi = function (wi) { // Add WiFi-URI parser handler (access to eQR prohibits arrow shorthand)
-			if (!wi) { eQR.status(0); return; } // Fail whole scan if WiFi-URI failed to parse
-			_el('ssid').value = wi.S;
-			_el('pass').value = (wi.P) : wi.P ? '';
-			_el('savewifi').click();
+		eQR.readwifi = function (wi) { // Enable WiFi-URI parser through adding result handler
+			if (!wi) { eQR.status(0); return; } // Signalise error
+			_el('ssid').value = wi.S; // Set ssid input element
+			_el('pass').value = (wi.P) : wi.P ? ''; // Set password input element
+			_el('wifisave').click(); // Simulate click on save
 		};	
+		eQR.read = (u) => { // Add handler for all further URIs
+			console.log('readlen: ' + u.length + ' - readcontent: ' + u.join(' - '));
+		};
 		eQR.readraw = (u) => { // Add raw output handler for debugging purposes
 			console.log('readraw: ' + u);
-		};
-		eQR.read = (u) => { // Add handler for all remaining URIs after WiFi-URI parsing (do not attach handler to keep)
-			console.log('readlen: ' + u.length + ' - ' + u.join('-'));
 		};
 		const _cmd = _el('qri'); // Retrieve file input element from DOM
 		_cmd.addEventListener('click', event => { eQR.exec(); }); // Attach click handler to trigger dynamic loading
