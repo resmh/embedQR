@@ -1,6 +1,6 @@
 # embedQR
 
-The library at hand enables to scan and parse QR Codes within Web Applications while demanding minimal server resources.
+The library at hand enables to scan and parse QR Codes within Web Applications while demanding minimal server resources. It provides an integrated parser for WiFi URIs.
 
 ### Requirements for Integration
 
@@ -32,4 +32,3 @@ The engine submodule is subject to the Apache License 2.0 as provided within LIC
 
 The term "QR Code" is a registered trademark of DENSO WAVE Incorporated. 
 
- 
