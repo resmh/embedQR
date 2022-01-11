@@ -1,6 +1,6 @@
 # embedQR
 
-The library at hand enables to scan and parse QR Codes within Web Applications while demanding minimal server resources. It provides an integrated parser for WiFi URIs.
+The library at hand enables to scan and parse QR Codes within Web Applications while demanding minimal server resources. It provides an integrated parser for WiFi URIs which complies to both the legacy defacto standard as well as the modern WPA3 standard. (Note: No certification has been conducted).
 
 ### Requirements for Integration
 
@@ -32,3 +32,4 @@ The engine submodule is subject to the Apache License 2.0 as provided within LIC
 
 The term "QR Code" is a registered trademark of DENSO WAVE Incorporated. 
 
+The term "WPA3" is a registered trademark of the Wi-Fi Alliance.
