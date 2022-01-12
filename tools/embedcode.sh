@@ -56,10 +56,13 @@ echo "const char ${constname}[] PROGMEM =" > "$plainfile"
 while IFS= read -r line
 do
 	if [ ! "$line" == "" ]; then
-		line=$(echo "$line" | sed --expression='s/"/'"'"'/g')
-		line=$(echo "$line" | grep -Po "[^ \t]{1}.*")
-		echo '"'"$line"'"' >> "$plainfile"
-		if [ ! "$compfile" == "" ] && [ ! "$line" == "" ]; then plainresult="${plainresult}${line}"; fi
+		linep=$(echo "$line" | sed --expression='s/\\/\\\\/g')
+		linep=$(echo "$linep" | sed --expression='s/"/\\"/g')
+		linep=$(echo "$linep" | grep -Po "[^ \t]{1}.*")
+
+		linec=$(echo "$line" | grep -Po "[^ \t]{1}.*")
+		echo '"'"$linep"'"' >> "$plainfile"
+		if [ ! "$compfile" == "" ] && [ ! "$linec" == "" ]; then plainresult="${plainresult}${linec}"; fi
 	fi
 done < "$infile"
 echo '"";' >> "$plainfile"
